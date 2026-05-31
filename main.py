@@ -1,28 +1,44 @@
-import falcon
-import jinja2
-import falcon.asgi
-import uvicorn
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse
 
-with open("index.html", 'r') as file:
+app = FastAPI()
+
+
+# Manage multiple ws connections
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections = []
+
+    async def connect(self, websocket: WebSocket):
+        await websocket.accept()
+        self.active_connections.append(websocket)
+
+    def disconnect(self, websocket: WebSocket):
+        self.active_connections.remove(websocket)
+
+    async def broadcast(self, message: str):
+        for connection in self.active_connections:
+            await connection.send_text(message)
+
+manager = ConnectionManager()
+
+# Read in chat app page
+with open("index.html", "r", encoding="utf-8") as file:
     html = file.read()
 
-class ChatResource:
-    async def on_get(self, req, resp):
-        """Handles GET requests"""
-        resp.status = falcon.HTTP_200
-        resp.content_type = 'text/html'
-        template = jinja2.Template(html)
-        resp.body = template.render()
+# Serve chat app page
+@app.get("/")
+async def get():
+    return HTMLResponse(html)
 
-    async def on_websocket(self, req, websocket):
-        await websocket.accept()
+# Serve websocket chat
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await manager.connect(websocket)
+    try:
         while True:
             data = await websocket.receive_text()
-            await websocket.send_text(f"Message: {data}")
-
-app = falcon.asgi.App()
-chat = ChatResource()
-app.add_route('/chat', chat)
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8888, reload=True)
+            await manager.broadcast(f"Someone said: {data}")
+    except WebSocketDisconnect:
+        manager.disconnect(websocket)
+        print("Client disconnected")

@@ -1,48 +1,46 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>GeeksforGeeks Chat</title>
-    <style>
-      body {
-        background-color: #f0f8ea;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-      }
-      #chat-container {
-        width: 400px;
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-    </style>
+    <meta charset="utf-8" />
+    <title>FastAPI WebSocket Test</title>
   </head>
   <body>
-    <div id="chat-container">
-      <h1>GeeksforGeeks Chat</h1>
-      <ul id="messages"></ul>
-      <form action="" onsubmit="sendMessage(event)">
-        <input type="text" id="messageText" autocomplete="off" />
-        <button type="submit">Send</button>
-      </form>
-    </div>
+    <h1>WebSocket Test Client</h1>
+    <div id="messages"></div>
+    <input id="messageText" type="text" placeholder="Type a message..." />
+    <button id="sendButton" type="button" onclick="sendMessage()">Send</button>
+    <button id="clearButton" type="button" onclick="clearMessages()">
+      Clear All Messages
+    </button>
     <script>
-      var ws = new WebSocket("ws://localhost:8000/chat");
+      var ws = new WebSocket("ws://localhost:8000/ws");
       ws.onmessage = function (event) {
         var messages = document.getElementById("messages");
-        var message = document.createElement("li");
-        var content = document.createTextNode(event.data);
-        message.appendChild(content);
+        var message = document.createElement("div");
+        message.textContent = event.data;
         messages.appendChild(message);
       };
-      function sendMessage(event) {
+
+      const messageTextElement = document.getElementById("messageText");
+      messageTextElement.addEventListener("keydown", function (event) {
+        // Check if the pressed key is "Enter"
+        if (event.key === "Enter") {
+          // Prevent default form behavior if necessary
+          event.preventDefault();
+          // Send the message
+          sendMessage();
+        }
+      });
+
+      function sendMessage() {
         var input = document.getElementById("messageText");
         ws.send(input.value);
         input.value = "";
-        event.preventDefault();
+      }
+
+      function clearMessages() {
+        var messages = document.getElementById("messages");
+        messages.innerHTML = "";
       }
     </script>
   </body>
