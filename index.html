@@ -46,7 +46,7 @@
     </button>
     <div class="hints">Enter or ^S to send, ^C to clear all messages</div>
     <script>
-      var ws = new WebSocket("ws://localhost:8000/ws");
+      var ws = new WebSocket("ws://localhost:##PORT##/ws");
       ws.onmessage = function (event) {
         var messages = document.getElementById("messages");
         var message = document.createElement("div");

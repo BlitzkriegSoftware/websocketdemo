@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FastAPI: Uvicorn Debugger",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "uvicorn",
+      "env": {
+        "PORT": "8888"
+      },
+      "args": [
+        "main:app", // Replace 'main' with your Python filename
+        "--host",
+        "127.0.0.1",
+        "--port",
+        "${env:PORT}",
+        "--reload"
+      ],
+      "jinja": true,
+      "justMyCode": true,
+      "console": "integratedTerminal"
+    }
+  ]
+}
