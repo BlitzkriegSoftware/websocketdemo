@@ -2,7 +2,18 @@
 
 a demo of web sockets (bi-directional)
 
+- [web socket demo](#web-socket-demo)
+  - [References](#references)
+  - [Initial Setup](#initial-setup)
+  - [Set your port](#set-your-port)
+  - [Run WebSocket Server](#run-websocket-server)
+  - [Stop web server](#stop-web-server)
+  - [Play with app](#play-with-app)
+
+## References
+
 - See [betterstack fastapi-websockets](https://betterstack.com/community/guides/scaling-python/fastapi-websockets/)
+- See [FastAPI](https://fastapi.tiangolo.com/)
 
 ## Initial Setup
 
@@ -10,39 +21,51 @@ a demo of web sockets (bi-directional)
 .\.venv\Scripts\Activate.ps1
 ```
 
+## Set your port
+
+```powershell
+# Replace 8888 with whatever port you want
+[System.Environment]::SetEnvironmentVariable("PORT", 8888, "User")
+# Refresh your environment variables
+```
+
 ## Run WebSocket Server
 
 ```powershell
- fastapi dev main.py
+uv run main.py
 ```
 
 Yields:
 
 ```text
-   FastAPI   Starting development server 🚀
+Port:  8888
+INFO:     Will watch for changes in these directories: ['C:\\code\\websocketdemo']
+INFO:     Uvicorn running on http://127.0.0.1:8888 (Press CTRL+C to quit)
+INFO:     Started reloader process [7128] using WatchFiles
+INFO:     Started server process [26148]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+```
 
-             Searching for package file structure from directories with __init__.py files
-             Importing from C:\code\websocketdemo
+## Stop web server
 
-    module   🐍 main.py
+```powershell
+^c # Control+C
+```
 
-      code   Importing the FastAPI app object from the module with the following code:
+Yields:
 
-             from main import app
+```powershell
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [26148]
+INFO:     Stopping reloader process [7128]
+```
 
-       app   Using import string: main:app
+## Play with app
 
-    server   Server started at http://127.0.0.1:8000
-    server   Documentation at http://127.0.0.1:8000/docs
-
-       tip   Running in development mode, for production use: fastapi run
-
-             Logs:
-
-      INFO   Will watch for changes in these directories: ['C:\\code\\websocketdemo']
-      INFO   Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
-      INFO   Started reloader process [12684] using WatchFiles
-      INFO   Started server process [16132]
-      INFO   Waiting for application startup.
-      INFO   Application startup complete.
+```powershell
+# Use whatever port you specified
+start http://127.0.0.1:8888
 ```
