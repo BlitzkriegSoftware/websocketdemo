@@ -3,15 +3,48 @@
   <head>
     <meta charset="utf-8" />
     <title>FastAPI WebSocket Test</title>
+    <style>
+      .buttonfirst::first-letter {
+        color: rgb(10, 0, 88);
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+      .messagetext {
+        width: 70%;
+      }
+      .hints {
+        font-weight: 0.8em;
+        color: grey;
+      }
+    </style>
   </head>
   <body>
     <h1>WebSocket Test Client</h1>
     <div id="messages"></div>
-    <input id="messageText" type="text" placeholder="Type a message..." />
-    <button id="sendButton" type="button" onclick="sendMessage()">Send</button>
-    <button id="clearButton" type="button" onclick="clearMessages()">
+    <input
+      id="messageText"
+      type="text"
+      class="messagetext"
+      placeholder="Type a message..."
+      autofocus
+    />
+    <button
+      id="sendButton"
+      type="button"
+      onclick="sendMessage()"
+      class="buttonfirst"
+    >
+      Send
+    </button>
+    <button
+      id="clearButton"
+      type="button"
+      onclick="clearMessages()"
+      class="buttonfirst"
+    >
       Clear All Messages
     </button>
+    <div class="hints">Enter or ^S to send, ^C to clear all messages</div>
     <script>
       var ws = new WebSocket("ws://localhost:8000/ws");
       ws.onmessage = function (event) {
@@ -23,11 +56,20 @@
 
       const messageTextElement = document.getElementById("messageText");
       messageTextElement.addEventListener("keydown", function (event) {
+        if (event.ctrlKey && event.key.toLowerCase() === "c") {
+          // Prevent default form behavior if necessary
+          event.preventDefault();
+          clearMessages();
+        }
+        if (event.ctrlKey && event.key.toLowerCase() === "s") {
+          // Prevent default form behavior if necessary
+          event.preventDefault();
+          sendMessage();
+        }
         // Check if the pressed key is "Enter"
         if (event.key === "Enter") {
           // Prevent default form behavior if necessary
           event.preventDefault();
-          // Send the message
           sendMessage();
         }
       });
